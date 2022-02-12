@@ -1,0 +1,147 @@
+<html lang="en">
+  <head>
+    <title>Critical Labs  | Alarm Clock</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="icon" type="image/x-icon" href="logo.png">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@200&display=swap" rel="stylesheet">
+  </head>
+  <body onload="checkTime()">
+    <div class="header">
+      <img src="logo.png" alt="logo">
+      <h1>Critical Labs<p1>Alarm Clock</p1></h1>
+    </div>
+    <table id="alarms">
+      <tr>
+        <td>Day</td>
+        <td>Name</td>
+        <td>Time</td>
+        <td>AM/PM</td>
+      </tr>
+      <tr>
+        <th>Monday</th>
+        <th>Work</th>
+        <th>7:00</th>
+        <th>AM</th>
+      </tr>
+
+      <tr>
+        <th>Tuesday</th>
+        <th>Work</th>
+        <th>7:00</th>
+        <th>AM</th>
+      </tr>
+      <tr>
+        <th>Wednesday</th>
+        <th>Work</th>
+        <th>7:00</th>
+        <th>AM</th>
+      </tr>
+      <tr>
+        <th>Thursday</th>
+        <th>Work</th>
+        <th>7:00</th>
+        <th>AM</th>
+      </tr>
+      <tr>
+        <th>Friday</th>
+        <th>Work</th>
+        <th>7:00</th>
+        <th>AM</th>
+      </tr>
+      <tr>
+        <th>Saturday</th>
+        <th>Work</th>
+      </tr>
+      <tr>
+        <th>Sunday</th>
+        <th>None</th>
+      </tr>
+    </table>
+    <div id="time">
+      <p2 id="hour"></p2>
+      <p2 id="minute"></p2>
+      <p2 id="second"></p2>
+      <p2 id="ampm"></p2>
+    </div>
+    <button id="snooze" type="button" onclick="alarmOff()">Snooze</button>
+    <script>
+    var delay = 0;
+      function checkTime(){
+        var d = new Date();
+        //Checks times digits and sets 0's as needed
+        if(d.getHours() <= 12){
+          document.getElementById("hour").innerHTML = d.getHours() + " :";
+        }
+        else{
+          document.getElementById("hour").innerHTML = (d.getHours()-12) + " :";
+        }
+        if(d.getMinutes() < 10){
+          document.getElementById("minute").innerHTML = "0" + d.getMinutes() + " :";
+        }
+        else{
+          document.getElementById("minute").innerHTML = d.getMinutes() + " :";
+        }
+        if(d.getSeconds() < 10){
+          document.getElementById("second").innerHTML = "0" + d.getSeconds();
+        }
+        else{
+          document.getElementById("second").innerHTML = d.getSeconds();
+        }
+        if(d.getHours() < 12){
+          document.getElementById("ampm").innerHTML = "AM";
+        }
+        else{
+          document.getElementById("ampm").innerHTML = "PM";
+        }
+
+        //Checks for Alarms and Compares Alarms
+        var table = document.getElementById("alarms");
+        var currentTime;
+        var currentAMPM = "";
+        var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+        var currentDay = days[d.getDay()] + "";
+
+        if(d.getHours() > 12){
+          currentTime = (d.getHours()-12);
+          currentAMPM = "PM";
+        }
+        else{
+          currentTime = d.getHours();
+          currentAMPM = "AM";
+        }
+
+        if(d.getMinutes() < 10){
+          currentTime = currentTime + ":0" + d.getMinutes();
+        }
+        else{
+          currentTime = currentTime + ":" + d.getMinutes();
+        }
+        for (var i = 1, row; row = table.rows[i]; i++){
+          var alarmDay = document.getElementById("alarms").rows[i].cells[0].innerHTML + "";
+          var x = document.getElementById("alarms").rows[i].cells[1].innerHTML;
+          var alarmTime = document.getElementById("alarms").rows[i].cells[2].value;
+          var alarmAMPM = document.getElementById("alarms").rows[i].cells[3].innerHTML + "";
+          if(delay > 0){
+            delay - 1000;
+          }
+          if(!x.includes("None") && currentDay == alarmDay && alarmTime == currentTime && delay == 0/* && (!currentAMPM.includes(alarmAMPM))*/){
+            alarmOn();
+            setTimeout(checkTime, 1000);
+          }
+          setTimeout(checkTime, 1000);
+        }
+        setTimeout(checkTime, 1000);
+      }
+      var audio = new Audio('alarm.mp3');
+      function alarmOn(){
+        document.getElementById("snooze").style.opacity = 1;
+        audio.play();
+      }
+      function alarmOff(){
+        delay = 60000;
+        document.getElementById("snooze").style.opacity = 0;
+        audio.pause();
+      }
+    </script>
+  </body>
+</html>
